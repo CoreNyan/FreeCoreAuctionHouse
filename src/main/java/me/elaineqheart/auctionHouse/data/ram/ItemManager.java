@@ -46,6 +46,7 @@ public class ItemManager {
     public static ItemStack chooseItemBuyAmount;
     public static ItemStack refresh;
     public static ItemStack myBids;
+    public static ItemStack openSellMenu;
 
     static {
         reload();
@@ -78,6 +79,21 @@ public class ItemManager {
         chooseItemBuyAmount = createChooseItemBuyAmount();
         refresh = createRefresh();
         myBids = createMyBids();
+        openSellMenu = createOpenSellMenu();
+    }
+
+    private static ItemStack createOpenSellMenu() {
+        ItemStack item = new ItemStack(Material.GOLD_INGOT);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setItemName("§a§l上架商品");
+            List<String> lore = new ArrayList<>();
+            lore.add("§7点击打开可视化上架菜单");
+            lore.add("§7可自定义出售价格、数量以及一口价/竞拍模式");
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+        return item;
     }
 
     private static ItemStack createFillerItem(){

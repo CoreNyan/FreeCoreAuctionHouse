@@ -57,6 +57,31 @@ public class ItemNote {
         ItemNoteStorage.addItem(noteID, ItemStackConverter.decode(itemData));
     }
 
+    public ItemNote(UUID noteID, String playerName, UUID playerUUID, String buyerName, UUID buyerUUID,
+                    double price, Date dateCreated, String itemData, boolean isSold,
+                    int partiallySoldAmountLeft, String adminMessage, long auctionTime,
+                    String itemName, boolean isBIDAuction, List<Bid> bidHistory, Set<UUID> claimedPlayers) {
+        this.noteID = noteID;
+        this.playerName = playerName;
+        this.playerUUID = playerUUID;
+        this.buyerName = buyerName;
+        this.buyerUUID = buyerUUID;
+        this.price = price;
+        this.dateCreated = dateCreated;
+        this.itemData = itemData;
+        this.isSold = isSold;
+        this.partiallySoldAmountLeft = partiallySoldAmountLeft;
+        this.adminMessage = adminMessage;
+        this.auctionTime = auctionTime;
+        this.itemName = itemName;
+        this.isBIDAuction = isBIDAuction;
+        this.bidHistory = bidHistory != null ? bidHistory : new ArrayList<>();
+        this.claimedPlayers = claimedPlayers != null ? claimedPlayers : new HashSet<>();
+        if (itemData != null) {
+            ItemNoteStorage.addItem(noteID, ItemStackConverter.decode(itemData));
+        }
+    }
+
     public ItemStack getItem(){
         if (ItemNoteStorage.getItem(noteID) != null) return ItemNoteStorage.getItem(noteID).clone();
         ItemStack myItem = ItemStackConverter.decode(itemData);
@@ -135,8 +160,20 @@ public class ItemNote {
     //Getters and Setters
     public String getPlayerName() {return playerName;}
     public String getBuyerName() {return isBIDAuction ? getLastBidderName() : buyerName;}
-    public UUID getBuyerUUID() {return isBIDAuction ? getLastBidder() :
-            (buyerUUID != null ? buyerUUID : Bukkit.getOfflinePlayer(buyerName).getUniqueId());} //offline player backwards compatibility
+    public UUID getBuyerUUID() {
+        if (isBIDAuction) {
+            return getLastBidder();
+        }
+        if (buyerUUID != null) {
+            return buyerUUID;
+        }
+        if (buyerName != null && !buyerName.isEmpty()) {
+            try {
+                return Bukkit.getOfflinePlayer(buyerName).getUniqueId();
+            } catch (Exception ignored) {}
+        }
+        return null;
+    }
     public UUID getPlayerUUID() {return playerUUID;}
     public double getPrice() {return price;}
     public boolean isSold() {return isSold;}
@@ -157,13 +194,23 @@ public class ItemNote {
     public String getLastBidderName() {return getBidHistoryList().isEmpty() ? null : getBidHistoryList().getLast().getPlayerName();}
     public UUID getLastBidder() {return getBidHistoryList().isEmpty() ? null : getBidHistoryList().getLast().getPlayerID();}
     public Set<UUID> getBidders() {
-        return getBidHistoryList().stream()
-                .map(Bid::getPlayerID)
-                .collect(Collectors.toSet());
+        Set<UUID> result = new HashSet<>();
+        try {
+            for (Bid bid : getBidHistoryList()) {
+                if (bid != null && bid.getPlayerID() != null) {
+                    result.add(bid.getPlayerID());
+                }
+            }
+        } catch (Throwable ignored) {}
+        return result;
     }
     public double getBid(Player p) {
+        return getBid(p.getUniqueId());
+    }
+
+    public double getBid(UUID uuid) {
         return getBidHistoryList().stream()
-                .filter(bid -> bid.getPlayerID().equals(p.getUniqueId()))
+                .filter(bid -> bid.getPlayerID().equals(uuid))
                 .map(Bid::getPrice)
                 .reduce((first, second) -> second)
                 .orElse(0.0);
@@ -196,4 +243,7 @@ public class ItemNote {
     public void setAuctionTime(long time) {this.auctionTime = time;}
     public void setPartiallySoldAmountLeft(int amount) {this.partiallySoldAmountLeft = amount;}
     public void setPrice(double amount) {this.price = amount;}
+    public Date getDateCreated() {return dateCreated;}
+    public String getItemData() {return itemData;}
+    public long getAuctionTime() {return auctionTime;}
 }

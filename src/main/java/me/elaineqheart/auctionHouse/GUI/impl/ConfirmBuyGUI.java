@@ -125,30 +125,44 @@ public class ConfirmBuyGUI extends InventoryGUI{
                     p.sendMessage(M.getFormatted("chat.purchase-auction",
                             "%seller%", M.formatSeller(note.getPlayerName(), note.getPlayerUUID()),
                             "%item%", note.getItemName()));
-                    Player seller = Bukkit.getPlayer(note.getPlayerUUID());
-                    if (seller == null || !Bukkit.getOnlinePlayers().contains(seller)) return;
+
                     if (SettingManager.soldMessageEnabled) {
                         String itemName = note.getItemName();
                         String amount = String.valueOf(item.getAmount());
                         String buyer = M.formatBuyer(p.getDisplayName(), p.getUniqueId());
-                        if(SettingManager.autoCollect) {
-                            seller.sendMessage(M.getFormatted("chat.sold-message.auto-collect", price,
-                                    "%buyer%", buyer,
-                                    "%item%", itemName,
-                                    "%amount%", amount));
+                        String notifyText = SettingManager.autoCollect ?
+                                M.getFormatted("chat.sold-message.auto-collect", price,
+                                        "%buyer%", buyer,
+                                        "%item%", itemName,
+                                        "%amount%", amount) :
+                                M.getFormatted("chat.sold-message.prefix", price,
+                                        "%buyer%", buyer,
+                                        "%item%", itemName,
+                                        "%amount%", amount) + M.getFormatted("chat.sold-message.interaction");
+
+                        Player seller = Bukkit.getPlayer(note.getPlayerUUID());
+                        if (seller != null && seller.isOnline()) {
+                            if(SettingManager.autoCollect) {
+                                seller.sendMessage(notifyText);
+                            } else {
+                                TextComponent component = new TextComponent(M.getFormatted("chat.sold-message.prefix", price,
+                                        "%buyer%", buyer,
+                                        "%item%", itemName,
+                                        "%amount%", amount));
+                                TextComponent click = new TextComponent(M.getFormatted("chat.sold-message.interaction"));
+                                click.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ah view " + note.getNoteID().toString()));
+                                seller.spigot().sendMessage(component, click);
+                            }
                         } else {
-                            TextComponent component = new TextComponent(M.getFormatted("chat.sold-message.prefix", price,
-                                    "%buyer%", buyer,
-                                    "%item%", itemName,
-                                    "%amount%", amount));
-                            TextComponent click = new TextComponent(M.getFormatted("chat.sold-message.interaction"));
-                            click.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ah view " + note.getNoteID().toString()));
-                            seller.spigot().sendMessage(component, click);
+                            // 跨服卖家通知：通过 MySQL 跨服通知队列派发给卖家所在子服
+                            me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLNotificationDAO.sendNotification(note.getPlayerUUID(), notifyText);
                         }
                     }
-                    if (SettingManager.autoCollect && Bukkit.getPlayer(note.getPlayerUUID()) != null) {
-                        AuctionHouse.getScheduler().entitySpecificScheduler(seller).run(() -> CollectSoldItemGUI.collect
-                                (seller, note.getNoteID(), item.getAmount(), note.getSoldPrice()),
+
+                    Player localSeller = Bukkit.getPlayer(note.getPlayerUUID());
+                    if (SettingManager.autoCollect && localSeller != null && localSeller.isOnline()) {
+                        AuctionHouse.getScheduler().entitySpecificScheduler(localSeller).run(() -> CollectSoldItemGUI.collect
+                                (localSeller, note.getNoteID(), item.getAmount(), note.getSoldPrice()),
                                 null
                         );
                     }

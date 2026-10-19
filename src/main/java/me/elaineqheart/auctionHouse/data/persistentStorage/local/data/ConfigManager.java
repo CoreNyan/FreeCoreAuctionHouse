@@ -27,21 +27,13 @@ public class ConfigManager {
     private static final AuctionHouse instance = AuctionHouse.getInstance();
 
     public static void setupConfigs() {
-        //Setup config.yml
         saveDefaultConfig();
-//        if (!Files.exists(Path.of(AuctionHouse.getPlugin().getDataFolder().getPath() + ".config.yml"))) {
-//            AuctionHouse.getPlugin().saveResource("config.yml", false);
-//        }
-        //AuctionHouse.getPlugin().saveResource("config.yml", false);
-//        System.out.println(Files.exists(Path.of(AuctionHouse.getPlugin().getDataFolder().getPath() + ".config.yml")));
-//        System.out.println(Path.of(AuctionHouse.getPlugin().getDataFolder().getPath() + ".config.yml"));
-        //Config defaultConfig = new Config();
-        //defaultConfig.setup("config.yml", true, "");
-        //AuctionHouse.getPlugin().reloadConfig();
         instance.getConfig().options().copyDefaults(true);
         instance.saveConfig();
 
-        messages.setup("messages.yml", true, "");
+        String langName = instance.getConfig().getString("language", "zh_CN");
+        String messageFileName = "zh_CN".equalsIgnoreCase(langName) || "zh".equalsIgnoreCase(langName) ? "zh_CN.yml" : "messages.yml";
+        messages.setup(messageFileName, true, "");
         displays.setup("displays.yml", false, "/data");
         bannedPlayers.setup("bannedPlayers.yml", false, "/data");
         permissions.setup("permissions.yml", true, "");
@@ -51,7 +43,6 @@ public class ConfigManager {
         layout.setup("layout.yml", true, "");
         transactionLogger.setup(transactionLogger.getNewName(), false, "/logs");
         AuctionHouse.getScheduler().globalRegionalScheduler().run(displays::backwardsCompatibility);
-        //old method: Bukkit.getScheduler().runTask(AuctionHouse.getPlugin(), ConfigManager::displaysBackwardsCompatibility);
         permissionsSetup();
     }
 
@@ -94,6 +85,9 @@ public class ConfigManager {
 
     public static void reloadConfigs() {
         instance.reloadConfig();
+        String langName = instance.getConfig().getString("language", "zh_CN");
+        String messageFileName = "zh_CN".equalsIgnoreCase(langName) || "zh".equalsIgnoreCase(langName) ? "zh_CN.yml" : "messages.yml";
+        messages.setup(messageFileName, true, "");
         getList().forEach(Config::reload);
         transactionLogger.setup(transactionLogger.getNewName(), false, "/logs");
     }

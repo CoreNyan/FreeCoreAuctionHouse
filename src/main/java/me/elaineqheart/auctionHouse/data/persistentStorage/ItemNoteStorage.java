@@ -1,7 +1,11 @@
 package me.elaineqheart.auctionHouse.data.persistentStorage;
 
+import me.elaineqheart.auctionHouse.data.persistentStorage.local.SettingManager;
 import me.elaineqheart.auctionHouse.data.persistentStorage.local.data.ConfigManager;
 import me.elaineqheart.auctionHouse.data.persistentStorage.local.data.JsonNoteStorage;
+import me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLManager;
+import me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLNoteDAO;
+import me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLSyncTask;
 import me.elaineqheart.auctionHouse.data.ram.AuctionHouseStorage;
 import me.elaineqheart.auctionHouse.data.ram.ItemManager;
 import me.elaineqheart.auctionHouse.data.ram.ItemNote;
@@ -10,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class ItemNoteStorage {
@@ -25,6 +30,10 @@ public class ItemNoteStorage {
         items.remove(itemNoteID);
     }
 
+    public static int getNumberOfAuctions(UUID playerUUID) {
+        return AuctionHouseStorage.getNumberOfAuctions(playerUUID);
+    }
+
 
     public static ItemNote createNote(Player p, ItemStack item, double price, boolean isBIDAuction) {
         ItemNote itemNote = new ItemNote(p, item, price, isBIDAuction);
@@ -35,24 +44,37 @@ public class ItemNoteStorage {
                 item.getAmount(),
                 isBIDAuction);
 
-        //if(r()) RedisNoteStorage.createNote(p, item, price); else
-        JsonNoteStorage.createNote(itemNote);
+        if (m()) {
+            MySQLNoteDAO.saveNote(itemNote);
+            AuctionHouseStorage.add(itemNote);
+        } else {
+            JsonNoteStorage.createNote(itemNote);
+        }
         return itemNote;
     }
 
     public static void saveNotes() throws IOException {
-        //if(!r())
-        JsonNoteStorage.saveNotes();
+        if (!m()) {
+            JsonNoteStorage.saveNotes();
+        }
     }
 
     public static void loadNotes() throws IOException {
-        //if(!r())
-        JsonNoteStorage.loadNotes();
+        if (m()) {
+            List<ItemNote> list = MySQLNoteDAO.loadAllNotes();
+            AuctionHouseStorage.set(list.toArray(new ItemNote[0]));
+        } else {
+            JsonNoteStorage.loadNotes();
+        }
     }
 
     private static void deleteNote(ItemNote note) {
-        //if(r()) RedisNoteStorage.deleteNote(note.getNoteID()); else
-        JsonNoteStorage.deleteNote(note);
+        if (m()) {
+            MySQLNoteDAO.deleteNote(note.getNoteID());
+            AuctionHouseStorage.remove(note);
+        } else {
+            JsonNoteStorage.deleteNote(note);
+        }
         removeItem(note.getNoteID());
     }
 
@@ -95,42 +117,46 @@ public class ItemNoteStorage {
     }
 
     public static void setBuyerName(ItemNote note, String buyerName, UUID playerID) {
-        //if(r()) RedisNoteStorage.updateField(note.getNoteID(), "buyerName", buyerName); else
         note.setBuyerName(buyerName, playerID);
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
     public static void setSold(ItemNote note, boolean isSold) {
-        //if(r()) RedisNoteStorage.updateField(note.getNoteID(), "isSold", isSold); else
         note.setSold(isSold);
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
     public static void setAdminMessage(ItemNote note, String adminMessage) {
-        //if(r()) RedisNoteStorage.updateField(note.getNoteID(), "adminMessage", adminMessage); else
         note.setAdminMessage(adminMessage);
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
     public static void setItem(ItemNote note, ItemStack item) {
-        //if(r()) RedisNoteStorage.updateField(note.getNoteID(), "itemData", ItemStackConverter.encode(item)); else
         note.setItem(item);
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
     public static void setAuctionTime(ItemNote note, long time) {
-        //if(r()) RedisNoteStorage.updateField(note.getNoteID(), "auctionTime", time); else
         note.setAuctionTime(time);
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
     public static void setPartiallySoldAmountLeft(ItemNote note, int amount) {
-        //if(r()) RedisNoteStorage.updateField(note.getNoteID(), "partiallySoldAmountLeft", amount); else
         note.setPartiallySoldAmountLeft(amount);
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
     public static void setPrice(ItemNote note, double amount) {
-        //if(r()) RedisNoteStorage.updateField(note.getNoteID(), "price", amount); else
         note.setPrice(amount);
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
     public static void addBid(ItemNote note, Player player, double amount) {
         note.addBid(player, amount);
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
     public static void removeBidFromMemory(Player player, ItemNote note) {
         note.removeBid(player);
         AuctionHouseStorage.removeBidFromMemory(player.getUniqueId(), note.getNoteID());
+        if (m()) MySQLNoteDAO.saveNote(note);
     }
 
-    //public static boolean r() {return SettingManager.useRedis;}
+    public static boolean m() {
+        return SettingManager.useMySQL && MySQLManager.isEnabled();
+    }
 
     public enum SortMode {
         NAME,
@@ -149,8 +175,13 @@ public class ItemNoteStorage {
                     note.isBIDAuction()
             );
         }
-        //if(r()) RedisNoteStorage.purge();else
-        JsonNoteStorage.purge();
+        if (m()) {
+            MySQLNoteDAO.purge();
+            AuctionHouseStorage.set(new ItemNote[0]);
+            reload();
+        } else {
+            JsonNoteStorage.purge();
+        }
     }
 
     public static void reload() {
@@ -159,7 +190,13 @@ public class ItemNoteStorage {
 
 
     public static boolean setSoldIfOnAuction(ItemNote note, Player p, int amount, double price) {
-        //check synchronously when using database
+        if (m()) {
+            boolean success = MySQLNoteDAO.tryBuyNote(note.getNoteID(), p.getDisplayName(), p.getUniqueId(), amount, price);
+            if (!success) {
+                MySQLSyncTask.syncNow();
+                return false;
+            }
+        }
 
         setSold(note, true);
         setBuyerName(note, p.getDisplayName(), p.getUniqueId());
@@ -214,6 +251,7 @@ public class ItemNoteStorage {
             if (!note.isBIDAuction()) deleteNote(note);
             else {
                 note.setSold(true);
+                if (m()) MySQLNoteDAO.saveNote(note);
                 AuctionHouseStorage.checkRemove(note.getNoteID());
             }
         }
@@ -222,14 +260,19 @@ public class ItemNoteStorage {
     }
 
     public static boolean addBidIfOnAuction(ItemNote note, Player p, double price) {
+        if (m()) {
+            boolean success = MySQLNoteDAO.tryPlaceBid(note.getNoteID(), p.getDisplayName(), p.getUniqueId(), price, SettingManager.lastBIDExtraTime);
+            if (!success) {
+                MySQLSyncTask.syncNow();
+                return false;
+            }
+        }
         addBid(note, p, price);
         saveNotesWithoutCheck();
         return true;
     }
 
     public static boolean claimEndedAuctionItem(Player p, ItemNote note) {
-        //check synchronously when using database
-
         removeBidFromMemory(p, note);
         saveNotesWithoutCheck();
         return true;
@@ -261,3 +304,4 @@ public class ItemNoteStorage {
     }
 
 }
+

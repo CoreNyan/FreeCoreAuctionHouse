@@ -24,11 +24,18 @@ public class SettingManager {
     public static boolean soldMessageEnabled;
     public static String permissionModerate;
     public static boolean partialSelling;
-    // public static boolean useRedis;
-    // public static String redisHost;
-    // public static String redisUsername;
-    // public static String redisPassword;
-    // public static int redisPort;
+    public static boolean useMySQL;
+    public static String mysqlHost;
+    public static int mysqlPort;
+    public static String mysqlDatabase;
+    public static String mysqlUsername;
+    public static String mysqlPassword;
+    public static boolean mysqlUseSSL;
+    public static boolean mysqlAllowPublicKeyRetrieval;
+    public static int mysqlMaxPoolSize;
+    public static int mysqlMinIdle;
+    public static int syncIntervalSeconds;
+    public static String language;
     public static int displayUpdateTicks;
     public static boolean autoCollect;
     public static boolean auctionAnnouncementsEnabled;
@@ -74,7 +81,7 @@ public class SettingManager {
         if (ConfigManager.backwardsCompatibility())
             backwardsCompatibility();
 
-        taxRate = c.getDouble("tax", 0.01);
+        taxRate = c.getDouble("tax", 0.30);
         if (taxRate < 0 || taxRate >= 1) {
             AuctionHouse.getInstance().getLogger().warning("The Auction House tax is " + taxRate*100 + " %");
             Bukkit.broadcastMessage("§c[AuctionHouse] Warning! The tax is " + taxRate*100 + "%");
@@ -86,12 +93,19 @@ public class SettingManager {
         formatTimeCharacters = c.getString("format-time-characters", "dhms");
         permissionModerate = c.getString("admin-permission", "auctionhouse.moderator");
         partialSelling = c.getBoolean("partial-selling", false);
-        // useRedis = c.getBoolean("multi-server-database.redis", false);
-        // redisHost = c.getString("multi-server-database.redis-host", "");
-        // redisUsername = c.getString("multi-server-database.redis-username",
-        // "default");
-        // redisPassword = c.getString("multi-server-database.redis-password", "");
-        // redisPort = c.getInt("multi-server-database.redis-port", 0);
+
+        language = c.getString("language", "zh_CN");
+        useMySQL = c.getBoolean("database.mysql.enabled", true);
+        mysqlHost = c.getString("database.mysql.host", "127.0.0.1");
+        mysqlPort = c.getInt("database.mysql.port", 3306);
+        mysqlDatabase = c.getString("database.mysql.database", "freecore_sync");
+        mysqlUsername = c.getString("database.mysql.username", "fc_sync");
+        mysqlPassword = c.getString("database.mysql.password", "21220b617ad13674de7034e81a1e26ebd5c6f5d8786d198d");
+        mysqlUseSSL = c.getBoolean("database.mysql.use-ssl", false);
+        mysqlAllowPublicKeyRetrieval = c.getBoolean("database.mysql.allow-public-key-retrieval", true);
+        mysqlMaxPoolSize = c.getInt("database.mysql.maximum-pool-size", 5);
+        mysqlMinIdle = c.getInt("database.mysql.minimum-idle", 1);
+        syncIntervalSeconds = c.getInt("database.sync-interval-seconds", 3);
         displayUpdateTicks = c.getInt("display-update", 80);
         autoCollect = c.getBoolean("auto-collect", false);
         auctionAnnouncementsEnabled = c.getBoolean("auction-announcements", true);

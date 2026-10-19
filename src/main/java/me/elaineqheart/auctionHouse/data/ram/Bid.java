@@ -21,6 +21,13 @@ public class Bid {
         this.bid = bid;
     }
 
+    public Bid(UUID player, String playerName, Date date, double bid) {
+        this.player = player;
+        this.playerName = playerName;
+        this.date = date;
+        this.bid = bid;
+    }
+
     public UUID getPlayerID() {return player;}
     public String getPlayerName() {return playerName;}
     public double getPrice() {return bid;}

@@ -158,6 +158,7 @@ public class MyAuctionsGUI extends InventoryGUI implements Runnable{
                         if(ConfigManager.permissions.getAuctionSlots(player) > screenSize) this.addButton(slot, nextPage()); else this.addButton(slot, fillerItem());
                     }
                     case 'r' -> this.addButton(slot, refresh());
+                    case 'a' -> this.addButton(slot, openSellButton());
                     case 'd' -> {
                         if(SettingManager.BIDAuctions) this.addButton(slot, myBids());
                         else this.addButton(slot, fillerItem());
@@ -166,6 +167,10 @@ public class MyAuctionsGUI extends InventoryGUI implements Runnable{
                 }
             }
         }
+        // 强保：即使服主或旧 layout.yml 仍是 '#' 占位，第 47 格（倒数第 7 格，原空位）强制挂载上架按钮
+        int bottomRowStart = (places.size() - 1) * 9;
+        int sellSlot = bottomRowStart + 2; // 对应第 3 列 (slot 47)
+        this.addButton(sellSlot, openSellButton());
     }
     private void fillOutBarriers(int auctions, List<Integer> itemSlots) {
         int startPage = c.getMyCurrentPage()*screenSize + screenSize;
@@ -174,6 +179,16 @@ public class MyAuctionsGUI extends InventoryGUI implements Runnable{
             this.addButton(itemSlots.get(screenSize-i-1), barrier());
         }
     }
+    private InventoryButton openSellButton() {
+        return new InventoryButton()
+                .creator(player -> ItemManager.openSellMenu)
+                .consumer(event -> {
+                    Sounds.click(event);
+                    Player p = (Player) event.getWhoClicked();
+                    AuctionHouse.getGuiManager().openGUI(new SellItemGUI(c, p.getInventory().getItemInMainHand()), p);
+                });
+    }
+
     private InventoryButton fillerItem(){
         return new InventoryButton()
                 .creator(player -> ItemManager.fillerItem)

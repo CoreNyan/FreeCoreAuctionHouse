@@ -105,6 +105,16 @@ public class AuctionHouseCommand implements CommandExecutor, TabCompleter {
                 }
                 AuctionHouse.getGuiManager().openGUI(new AuctionHouseGUI(conf), p);
             }
+            if(strings.length==1 &&
+                    (strings[0].equalsIgnoreCase(M.getFormatted("commands.sell")) && SettingManager.BINAuctions
+                            || strings[0].equalsIgnoreCase(M.getFormatted("commands.bid")) && SettingManager.BIDAuctions)) {
+                if(ConfigManager.bannedPlayers.checkIsBannedSendMessage(p)) {
+                    return true;
+                }
+                AhConfiguration conf = AhConfiguration.getInstance(p);
+                AuctionHouse.getGuiManager().openGUI(new me.elaineqheart.auctionHouse.GUI.impl.SellItemGUI(conf, p.getInventory().getItemInMainHand()), p);
+                return true;
+            }
             if((strings.length==2 || strings.length==3) &&
                     (strings[0].equals(M.getFormatted("commands.sell")) && SettingManager.BINAuctions
                             || strings[0].equals(M.getFormatted("commands.bid")) && SettingManager.BIDAuctions)) {
@@ -162,8 +172,19 @@ public class AuctionHouseCommand implements CommandExecutor, TabCompleter {
                 }
                 ItemStack inputItem = item.clone();
                 inputItem.setAmount(amount);
+                
+                ItemNote note;
+                try {
+                    note = ItemNoteStorage.createNote(p, inputItem, price, isBIDAuction);
+                } catch (Exception ex) {
+                    AuctionHouse.getInstance().getLogger().severe("创建上架物品失败: " + ex.getMessage());
+                    ex.printStackTrace();
+                    p.sendMessage(M.getFormatted("chat.already-sold"));
+                    return true;
+                }
+                
+                // 确保数据成功创建后再扣减玩家背包物品，防止异常吞物
                 item.setAmount(item.getAmount() - amount);
-                ItemNote note = ItemNoteStorage.createNote(p, inputItem, price, isBIDAuction);
                 p.sendMessage(M.getFormatted("command-feedback.auction", price));
                 Sounds.createAuction(p);
                 

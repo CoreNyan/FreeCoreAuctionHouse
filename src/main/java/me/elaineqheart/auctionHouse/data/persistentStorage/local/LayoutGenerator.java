@@ -17,14 +17,14 @@ public class LayoutGenerator {
                 "# . . . . . . . #",
                 "# . . . . . . . #",
                 "# # # # # # # # #",
-                "s o # p r n # f m"));
+                "s o a p r n # f m"));
         c.set("my-ah-layout", Arrays.asList(
                 "# # # # # # # # #",
                 "# . . . . . . . #",
                 "# . . . . . . . #",
                 "# . . . . . . . #",
                 "# # # # # # # # #",
-                "b o # p r n # d i"));
+                "b o a p r n # d i"));
         ItemStack fillerItem = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta meta = fillerItem.getItemMeta();
         assert meta != null;

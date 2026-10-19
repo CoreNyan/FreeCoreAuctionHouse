@@ -48,7 +48,8 @@ public class AhConfiguration {
         CONFIRM_BUY,
         MY_AUCTIONS,
         MY_BIDS,
-        ENDED_AUCTION
+        ENDED_AUCTION,
+        SELL_MENU
     }
 
     public enum BINFilter {

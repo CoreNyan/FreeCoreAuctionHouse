@@ -103,6 +103,7 @@ inventory-titles:
   confirm-bid: "Confirm Bid"
   my-bids: "Your Bids"
   auction-view: "Auction View"
+  sell-menu: "Sell Item Menu"
 items:
   next-page:
     name: "§aNext Page"

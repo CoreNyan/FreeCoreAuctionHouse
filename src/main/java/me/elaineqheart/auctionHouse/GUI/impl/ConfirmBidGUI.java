@@ -123,17 +123,23 @@ public class ConfirmBidGUI extends InventoryGUI {
                     Set<UUID> bidders = note.getBidders();
                     bidders.remove(p.getUniqueId());
                     for(UUID id : bidders) {
-                        Player bidder = Bukkit.getPlayer(id);
-                        if(bidder == null) continue;
-                        double difference = price - note.getBid(bidder);
-                        bidder.sendMessage(M.getFormatted("chat.outbid.prefix", difference,
+                        double difference = price - note.getBid(id);
+                        String outbidMsg = M.getFormatted("chat.outbid.prefix", difference,
                                 "%player%", M.formatPlayer(p.getDisplayName(), p.getUniqueId()),
-                                "%item%", note.getItemName()));
-                        TextComponent click = new TextComponent(M.getFormatted("chat.outbid.interaction"));
-                        click.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ah view " + note.getNoteID().toString()));
-                        bidder.spigot().sendMessage(click);
-                        if(AuctionViewGUI.currentGUIs.get(bidder) == null) continue;
-                        AuctionViewGUI.currentGUIs.get(bidder).update();
+                                "%item%", note.getItemName());
+                        Player bidder = Bukkit.getPlayer(id);
+                        if(bidder != null && bidder.isOnline()) {
+                            bidder.sendMessage(outbidMsg);
+                            TextComponent click = new TextComponent(M.getFormatted("chat.outbid.interaction"));
+                            click.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ah view " + note.getNoteID().toString()));
+                            bidder.spigot().sendMessage(click);
+                            if(AuctionViewGUI.currentGUIs.get(bidder) != null) {
+                                AuctionViewGUI.currentGUIs.get(bidder).update();
+                            }
+                        } else {
+                            // 跨服被超价通知
+                            me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLNotificationDAO.sendNotification(id, outbidMsg + M.getFormatted("chat.outbid.interaction"));
+                        }
                     }
                     Player itemOwner = Bukkit.getPlayer(note.getPlayerUUID());
                     if (itemOwner != null && AuctionViewGUI.currentGUIs.get(itemOwner) != null) AuctionViewGUI.currentGUIs.get(itemOwner).update();

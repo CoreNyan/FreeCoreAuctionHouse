@@ -5,6 +5,7 @@ import me.elaineqheart.auctionHouse.GUI.GUIManager;
 import me.elaineqheart.auctionHouse.GUI.other.input.InputGUIManager;
 import me.elaineqheart.auctionHouse.commands.DynamicCommandRegisterer;
 import me.elaineqheart.auctionHouse.data.persistentStorage.ItemNoteStorage;
+import me.elaineqheart.auctionHouse.data.persistentStorage.local.SettingManager;
 import me.elaineqheart.auctionHouse.data.persistentStorage.local.data.ConfigManager;
 import me.elaineqheart.auctionHouse.listeners.AhConfigurationListener;
 import me.elaineqheart.auctionHouse.listeners.PlayerJoinCollectListener;
@@ -40,6 +41,12 @@ public final class AuctionHouse extends JavaPlugin {
     @Override
     public void onEnable() {
         long start = System.currentTimeMillis();
+        // 预加载常用数据类，防止异步线程在动态类加载时触发 NoClassDefFoundError
+        try {
+            Class.forName(me.elaineqheart.auctionHouse.data.ram.Bid.class.getName());
+            Class.forName(me.elaineqheart.auctionHouse.data.ram.ItemNote.class.getName());
+            Class.forName(me.elaineqheart.auctionHouse.data.ram.AuctionHouseStorage.class.getName());
+        } catch (Throwable ignored) {}
         LocaleAPIExtension.setup();
         instance = this;
         guiManager = new GUIManager();
@@ -62,13 +69,19 @@ public final class AuctionHouse extends JavaPlugin {
 
         ConfigManager.setupConfigs();
 
-        //if(SettingManager.useRedis) RedisManager.connect();
+        if (SettingManager.useMySQL) {
+            me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLManager.init();
+        }
 
         try {
             ItemNoteStorage.loadNotes();
         } catch (IOException e) {
             getLogger().severe("Failed to load Auction House item data");
             throw new RuntimeException(e);
+        }
+
+        if (SettingManager.useMySQL) {
+            me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLSyncTask.start();
         }
 
         DynamicCommandRegisterer.init();
@@ -93,7 +106,7 @@ public final class AuctionHouse extends JavaPlugin {
         if (getServer().getPluginManager().getPlugin("DiscordSRV") != null) {
             DiscordSRVHook.unregister();
         }
-        //if(SettingManager.useRedis) RedisManager.disconnect();
+        me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLManager.close();
     }
 
 

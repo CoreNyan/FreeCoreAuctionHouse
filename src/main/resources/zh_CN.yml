@@ -1,0 +1,335 @@
+# ==============================================================
+# FreeCoreAuctionHouse 语言配置 (zh_CN)
+# 全面采用 Minecraft 原版截面颜色符号 §
+# 严格遵循 FreeCore 插件输出规范与统一格式
+# ==============================================================
+
+chat:
+  already-sold: " §b§l拍卖 §f§l>>> §c错误，该拍卖商品已经被买走啦！"
+  already-sold2: " §b§l拍卖 §f§l>>> §c该拍卖商品已经被其他玩家抢先买走！"
+  already-sold3: " §b§l拍卖 §f§l>>> §c已有玩家出了更高的竞价，请刷新重试！"
+  non-existent: " §b§l拍卖 §f§l>>> §c错误，该拍卖商品已被下架或不存在！"
+  non-existent2: " §b§l拍卖 §f§l>>> §c该拍卖商品已失效或被移除！"
+  not-enough-money: " §b§l拍卖 §f§l>>> §c你的 H币 余额不足，无法购买该商品！"
+  expired: " §b§l拍卖 §f§l>>> §c该拍卖商品已到期下架！"
+  inventory-full: " §b§l拍卖 §f§l>>> §c你的背包已满，请清理出空位后再领取物品！"
+  admin-expire-auction: " §b§l拍卖 §f§l>>> §a已成功将该拍卖设为过期！§7（原因：%reason%）"
+  admin-delete-auction: " §b§l拍卖 §f§l>>> §a已成功删除并没收该拍卖物品！§7（原因：%reason%）"
+  expired-auction-by-admin: " §b§l拍卖 §f§l>>> §c你的拍卖商品已被管理员下架！§7（原因：%reason%）"
+  deleted-auction-by-admin: " §b§l拍卖 §f§l>>> §c你的拍卖商品已被管理员强制删除！§7（原因：%reason%）"
+  own-auction: " §b§l拍卖 §f§l>>> §c这是你自己上架的商品，不能购买哦！"
+  auction-canceled: " §b§l拍卖 §f§l>>> §6你已成功撤回该拍卖商品！"
+  collect-sold-auction: " §b§l拍卖 §f§l>>> §a你已成功领取拍卖收益 §e%price%§a！"
+  purchase-auction: " §b§l拍卖 §f§l>>> §a恭喜你成功购买了 §e%seller% §a的拍卖商品 §f%item%§a！"
+  sold-message:
+    prefix: " §b§l拍卖 §f§l>>> §a玩家 §e%buyer% §a购买了你的 §f%item%§a，获得 §e%price%§a！"
+    interaction: " §f§l[点击查看]"
+    auto-collect: " §b§l拍卖 §f§l>>> §a玩家 §e%buyer% §a购买了你的 §f%item%§a！已自动入账 §e+%price%"
+  auction-announcement: " §b§l拍卖 §f§l>>> §e%player% §6上架了商品 §f%item% §6x§b%amount%§6，一口价 §e%price%"
+  bid-announcement: " §b§l拍卖 §f§l>>> §e%player% §6开启了拍卖 §f%item% §6x§b%amount%§6，起拍价 §e%price%"
+  invalid-amount: " §b§l拍卖 §f§l>>> §c请输入有效的数量！"
+  placed-bid: " §b§l拍卖 §f§l>>> §a成功对 §f%item% §a出价 §e%price%§a！"
+  outbid:
+    prefix: " §b§l拍卖 §f§l>>> §6玩家 §e%player% §6在 §f%item% §6的竞价中超过了你，当前出价 §e%price%"
+    interaction: " §f§l[点击出价]"
+  already-top-bid: " §b§l拍卖 §f§l>>> §6你当前已经是该拍卖的最高出价者！"
+  claim-auction: " §b§l拍卖 §f§l>>> §a恭喜竞拍成功，你已领取了 §e%seller% §a的拍品 §f%item%§a！"
+  collect-coins: " §b§l拍卖 §f§l>>> §a竞拍结束，已退还你之前被超过的竞价 §e%price%§a！"
+  input-listener: " §b§l拍卖 §f§l>>> §6%request%，请在聊天栏中输入："
+
+discord-srv:
+  new-listing-channel-name: "auctionhouseElaineQheartNewAuctions"
+  new-bin-auction-title: "一口价拍卖 >> %price-trim%"
+  new-bid-auction-title: "竞价拍卖 >> %price-trim%"
+
+inventory-titles:
+  admin-confirm-gui: "管理确认"
+  admin-menu: "拍卖行管理面板"
+  auction-house: "FreeCore 全球拍卖行"
+  cancel-auction: "取消拍卖"
+  collect-expired: "领取过期拍品"
+  collect-sold: "领取售出收益"
+  my-auctions: "我的拍卖列表"
+  anvil-search: "搜索物品"
+  anvil-admin-search: "管理搜索物品"
+  anvil-admin-expire-message: "下架原因"
+  anvil-admin-delete-message: "删除原因"
+  anvil-set-amount: "设置购买数量"
+  anvil-set-bid: "输入竞价金额"
+  confirm-bid: "确认出价"
+  my-bids: "我的出价记录"
+  auction-view: "查看拍卖"
+  sell-menu: "上架商品菜单"
+
+items:
+  next-page:
+    name: "§a下一页"
+    lore: "§7当前页: %page%/%pages%&n&n§e右键直接跳页！&n§a左键翻至下一页！"
+  previous-page:
+    name: "§a上一页"
+    lore: "§7当前页: %page%/%pages%&n&n§e右键直接跳页！&n§a左键翻至上一页！"
+  search:
+    name: "§b搜索商品"
+    lore: "§7按名称、类型或附魔查找商品&n&n§7当前过滤条件: §e%filter%&n&n§e右键清除条件！&n§a左键设置过滤词！"
+  locked-slot:
+    name: "§c未解锁栏位"
+  refresh:
+    name: "§a刷新列表"
+    lore: "§7点击立即同步与刷新当前页面"
+  back-main-menu:
+    name: "§e返回拍卖行"
+    lore: "§7点击返回主市场"
+  back-my-auctions:
+    name: "§e返回我的拍卖"
+    lore: "§7点击返回我的拍卖列表"
+  info:
+    name: "§6拍卖行使用说明"
+    lore: "§7在手中手持要出售的物品输入：&n§e/ah sell 1000&n§7即可上架一口价商品。&n§7数字为出售总价。&n§7当前交易税率为 §e%tax%§7。&n§8FreeCore 全球跨服拍卖"
+  my-auctions:
+    name: "§a我的拍卖"
+    lore: "§7点击管理我上架的商品与收益！"
+  sort-highest-price:
+    name: "§e排序方式"
+    lore: "&n§b▶ 价格由高到低&n§7   价格由低到高&n§7   即将结束&n§7   字母排序&n&n§e右键反向切换！&n§a左键顺序切换！"
+  sort-lowest-price:
+    name: "§e排序方式"
+    lore: "&n§7   价格由高到低&n§b▶ 价格由低到高&n§7   即将结束&n§7   字母排序&n&n§e右键反向切换！&n§a左键顺序切换！"
+  sort-ending-soon:
+    name: "§e排序方式"
+    lore: "&n§7   价格由高到低&n§7   价格由低到高&n§b▶ 即将结束&n§7   字母排序&n&n§e右键反向切换！&n§a左键顺序切换！"
+  sort-alphabetical:
+    name: "§e排序方式"
+    lore: "&n§7   价格由高到低&n§7   价格由低到高&n§7   即将结束&n§b▶ 字母排序&n&n§e右键反向切换！&n§a左键顺序切换！"
+  bin-filter-all:
+    name: "§e筛选模式"
+    lore: "&n§b▶ 显示全部&n§7   仅一口价&n§7   仅竞拍&n&n§e右键反向切换！&n§a左键顺序切换！"
+  bin-filter-bin:
+    name: "§e筛选模式"
+    lore: "&n§7   显示全部&n§b▶ 仅一口价&n§7   仅竞拍&n&n§e右键反向切换！&n§a左键顺序切换！"
+  bin-filter-auctions:
+    name: "§e筛选模式"
+    lore: "&n§7   显示全部&n§7   仅一口价&n§b▶ 仅竞拍&n&n§e右键反向切换！&n§a左键顺序切换！"
+  my-sort-all:
+    name: "§e分类查看"
+    lore: "&n§b▶ 全部商品&n§7   已售出商品&n§7   已过期商品&n§7   正在拍卖&n&n§e右键反向切换！&n§a左键顺序切换！"
+  my-sort-sold:
+    name: "§e分类查看"
+    lore: "&n§7   全部商品&n§b▶ 已售出商品&n§7   已过期商品&n§7   正在拍卖&n&n§e右键反向切换！&n§a左键顺序切换！"
+  my-sort-expired:
+    name: "§e分类查看"
+    lore: "&n§7   全部商品&n§7   已售出商品&n§b▶ 已过期商品&n§7   正在拍卖&n&n§e右键反向切换！&n§a左键顺序切换！"
+  my-sort-active:
+    name: "§e分类查看"
+    lore: "&n§7   全部商品&n§7   已售出商品&n§7   已过期商品&n§b▶ 正在拍卖&n&n§e右键反向切换！&n§a左键顺序切换！"
+  cancel:
+    name: "§c取消"
+  collect-expired:
+    name: "§c领取过期物品"
+    lore: "&n§e点击取回你的物品！"
+  cancel-auction:
+    name: "§c取消上架"
+    lore: "&n§e点击撤回并取回物品！"
+  cancel-bid-auction:
+    name: "§c取消竞拍"
+    lore: "&n§7只要出价次数为 §c0§7&n§7你就可以撤回该拍卖！&n&n§e点击撤回！"
+  admin-info:
+    name: "§c管理说明"
+    lore: "§7点击物品可执行下架或删除操作&n§7下架物品可由玩家领回&n§7删除物品将直接进你的背包"
+  admin-cancel-auction:
+    name: "§c强制删除拍品"
+    lore: "&n§e玩家将不会获得返还，物品将直接发给你！"
+  admin-expire-auction:
+    name: "§e强制下架拍品"
+    lore: "&n§e点击让该物品立即过期进入玩家领取队列！"
+  confirm:
+    name: "§a确认"
+  deleted:
+    name: "§c已取消物品"
+  auction:
+    lore:
+      default: "§8------------------&n§7卖家: §e%seller%&n§7一口价: §e%price%&n "
+      default-starting-bid: "§8------------------&n§7卖家: §e%seller%&n§7起拍价: §e%price%&n "
+      default-bid: "§8------------------&n§7卖家: §e%seller%&n§7当前最高价: §e%price%&n§7最高出价者: §e%buyer%&n "
+      own-auction: "§a这是你自己上架的商品！"
+      admin-deleted: "§c已被管理员强制删除！"
+      admin-expired: "§c已被管理员下架！"
+      admin-message: "§7原因: %reason%"
+      expired: "§c已过期！"
+      ended: "§7状态: §a已成交！"
+      sold: "§6已售出！"
+      partially-sold: "§6已售出: §e%sold%/%total%"
+      waiting-list: "§6上架公示中: §e%time%"
+      active: "§7剩余时间: §e%time%"
+      buying-item: "§8------------------"
+      shulker-preview: "§f§o右键预览潜影盒内容！"
+      bundle-preview: "§f§o右键预览收纳袋内容！"
+  admin-expire-item:
+    lore: "§8------------------&n§e点击将该拍品置为过期！"
+  admin-delete-item:
+    lore: "§8------------------&n§c点击从拍卖行删除并没收！"
+  buy-item:
+    name: "§6立刻购买"
+    lore: "&n§7点击直接以 §e%price% §7购买此商品！"
+  not-enough-money:
+    name: "§c余额不足"
+    lore: "&n§7你没有足够的 H币 购买此商品！"
+  confirm-buy:
+    name: "§a确认购买"
+    lore: "§7支付金额: §e%price%"
+  collect-sold:
+    name: "§a领取售出所得"
+    lore: "&n§7可领金额: §e%price%&n§e点击领取入账！"
+  choose-item-buy-amount:
+    name: "§f选择购买数量"
+    lore: "§7你可以选择仅购买部分数量"
+  loading:
+    name: "§7加载中..."
+  bid-history:
+    name: "§f出价历史"
+    lore: "§7累计出价: §a%amountOfBids% 次"
+    bid: "§8------------------&n§7出价者: §e%player%&n§7金额: §e%price%&n§7时间: §e%time% 前"
+    more: "§8------------------&n§7还有 §e%more% §7次早期出价记录"
+  bid-explanation:
+    name: "§f出价金额: §e%price%"
+    lore: "§7至少需要出价 §e%price% §7才能参与竞拍"
+  submit-bid:
+    name: "§6参与出价"
+    lore: "&n§7点击输入或确认你的出价！"
+  submit-another-bid:
+    name: "§6提高出价"
+    lore: "&n§7点击提高你的出价金额！"
+  cannot-afford-bid:
+    name: "§c无法出价"
+    lore: "&n§7你的 H币 余额不足！"
+  top-bid:
+    name: "§a你是最高出价者"
+    lore: "&n§7坐等结标即可！"
+  my-bids:
+    name: "§a我的竞价记录"
+    lore: "§7查看并管理你的竞标记录"
+  collect-auction:
+    name: "§a领取拍得物品"
+    lore: "&n§e恭喜赢得竞拍，点击将物品领入背包！"
+  collect-coins:
+    name: "§6退回竞价资金"
+    lore: "&n§7可退还: §e%price%&n§e点击取回你的 H币！"
+  own-bid:
+    name: "§6你的商品"
+    lore: "&n§7不能对自己上架的物品出价哦！"
+
+world:
+  npc: "§6拍卖大师"
+  displays:
+    line-0: "%price-trim%"
+    line-1: "§e%time%"
+    line-2: ""
+    line-3: "§d[点击查看]"
+    by-player: "卖家: %player%"
+    break-instruction: "§c如需移除展示，请切换创造模式潜行破坏基座方块。"
+
+commands:
+  ah: "ah"
+  aliases:
+  sell: "sell"
+  bid: "bid"
+  announce: "announce"
+  admin: "admin"
+  ban: "ban"
+  pardon: "pardon"
+  reload: "reload"
+  summon: "summon"
+  blacklist: "blacklist"
+  add: "add"
+  undo: "undo"
+  npc: "npc"
+  display: "display"
+  highest_price: "highest-price"
+  ending_soon: "ending-soon"
+  facing: "facing"
+  north: "north"
+  east: "east"
+  south: "south"
+  west: "west"
+  exact: "exact"
+  material: "material"
+  name_contains: "name_contains"
+  contains_lore: "contains_lore"
+  item_model: "item_model"
+  custom_model_data: "custom_model_data"
+  all: "all"
+  test: "test"
+  save-item-to-layout-file: "saveitemtolayout.yml"
+  about: "about"
+  help: "help"
+  search: "search"
+  search-cancel: "cancel"
+
+command-feedback:
+  usage: " §b§l拍卖 §f§l>>> §e用法: /ah sell <价格> [数量]"
+  bid-usage: " §b§l拍卖 §f§l>>> §e发起竞价拍卖: /ah bid <起拍价> [数量]"
+  search-usage: " §b§l拍卖 §f§l>>> §e用法: /ah search <物品名>&n §b§l拍卖 §f§l>>> §e取消搜索: /ah search cancel"
+  reached-max-auctions: " §b§l拍卖 §f§l>>> §c你最多只能同时上架 %limit% 个拍卖商品！"
+  no-item-in-hand: " §b§l拍卖 §f§l>>> §c请手持需要出售的物品！"
+  invalid-number: " §b§l拍卖 §f§l>>> §c请输入有效的数字！"
+  invalid-number2: " §b§l拍卖 §f§l>>> §c请输入有效的价格！"
+  invalid-number3: " §b§l拍卖 §f§l>>> §c请输入有效的天数！"
+  invalid-number4: " §b§l拍卖 §f§l>>> §c请输入有效的时长！"
+  invalid-number5: " §b§l拍卖 §f§l>>> §c物品位次必须大于 0！"
+  invalid-number6: " §b§l拍卖 §f§l>>> §c无效的位次，请输入正确数字！"
+  invalid-number7: " §b§l拍卖 §f§l>>> §c请输入合法的物品数量！"
+  auction: " §b§l拍卖 §f§l>>> §a成功上架商品，总价为 §e%price%§a！"
+  announcements-enabled: " §b§l拍卖 §f§l>>> §a已开启拍卖广播提醒！你将实时收到全服上架提示。"
+  announcements-disabled: " §b§l拍卖 §f§l>>> §6已关闭拍卖广播提醒！"
+  ban-usage: " §b§l拍卖 §f§l>>> §e用法: /ah ban <玩家> <天数> <原因>"
+  pardon-usage: " §b§l拍卖 §f§l>>> §e用法: /ah pardon <玩家>"
+  player-not-found: " §b§l拍卖 §f§l>>> §c目标玩家不在线！"
+  ban: " §b§l拍卖 §f§l>>> §c玩家 %player% 已被封禁拍卖功能 %duration% 天，原因：%reason%"
+  pardon: " §b§l拍卖 §f§l>>> §a已解封玩家 %player% 的拍卖功能！"
+  no-banned-players: " §b§l拍卖 §f§l>>> §6当前没有被封禁拍卖功能的玩家。"
+  not-banned: " §b§l拍卖 §f§l>>> §6该玩家未被封禁！"
+  reload: " §b§l拍卖 §f§l>>> §a拍卖行配置文件与语言包已成功重载！"
+  summon-usage: " §b§l拍卖 §f§l>>> §e用法: /ah summon <entity>"
+  npc-usage: " §b§l拍卖 §f§l>>> §e用法: /ah summon npc facing <朝向>"
+  display-usage: " §b§l拍卖 §f§l>>> §e用法: /ah summon display <排序方式> <排名>"
+  no-space-for-display: " §b§l拍卖 §f§l>>> §c该位置已经存在展示台，请先移除原有的展示！"
+  no-air-space-for-display: " §b§l拍卖 §f§l>>> §c空间不足以生成展示台，请先清理周围方块！"
+  blacklist-usage: " §b§l拍卖 §f§l>>> §e用法: /ah blacklist add <类型> [参数]"
+  blacklist-undo: " §b§l拍卖 §f§l>>> §a已成功移除上一条黑名单规则！"
+  blacklist-undo-error: " §b§l拍卖 §f§l>>> §6黑名单中暂无任何规则。"
+  blacklist-no-item-in-hand: " §b§l拍卖 §f§l>>> §c请手持物品以将其属性加入黑名单！"
+  blacklist-no-model: " §b§l拍卖 §f§l>>> §c请手持带有自定义 item_model 的物品！"
+  blacklist-success: " §b§l拍卖 §f§l>>> §a已将 %item% 的属性加入拍卖黑名单！"
+  blacklist-name-success: " §b§l拍卖 §f§l>>> §a已将名称包含“%name%”的物品加入黑名单！"
+  blacklist-all: " §b§l拍卖 §f§l>>> §c已将所有物品加入黑名单！"
+  item-blacklisted: " §b§l拍卖 §f§l>>> §c此物品已被禁止在拍卖行中出售！"
+  item-saved-to-layout-file: " §b§l拍卖 §f§l>>> §a主手物品已保存至 layout.yml 的 test 节点！"
+  min-bid: " §b§l拍卖 §f§l>>> §c起拍价格至少需要 %price%！"
+  min-bin: " §b§l拍卖 §f§l>>> §c一口价价格至少需要 %price%！"
+  max-bid: " §b§l拍卖 §f§l>>> §c起拍价格不能超过 %price%！"
+  max-bin: " §b§l拍卖 §f§l>>> §c一口价价格不能超过 %price%！"
+  help-prefix: "§7§l--------------[ §b§lFreeCore 拍卖行帮助 §7§l]--------------"
+  help:
+    about: "§6/ah about: §f查看插件作者与版本信息"
+    sell: "§6/ah sell <价格> [数量]: §f上架一口价商品"
+    bid: "§6/ah bid <起拍价> [数量]: §f上架竞拍商品"
+    announce: "§6/ah announce: §f开启或关闭上架全局广播通知"
+    admin: "§6/ah admin: §f管理员管理与下架/删除拍卖"
+    ban: "§6/ah ban: §f禁止指定玩家使用拍卖行"
+    pardon: "§6/ah pardon: §f解除玩家拍卖行封禁"
+    blacklist: "§6/ah blacklist: §f添加或查看拍卖违禁品规则"
+    reload: "§6/ah reload: §f重载拍卖行配置与语言包"
+    summon: "§6/ah summon: §f生成拍卖 NPC 大师或悬浮展示台"
+    test: "§6/ah test: §f保存手持物品布局测试数据"
+    help: "§6/ah help: §f显示本帮助菜单"
+    search: "§6/ah search: §f在拍卖行中搜索指定物品"
+
+placeholders:
+  number: "§e%input%§r"
+  price: "%number%%currency-symbol%"
+  price-trim: "%price%"
+  currency-symbol: " §eH币"
+  format-numbers: "#,###.##"
+  format-time-characters: "天时分秒"
+  player: "%player_name%"
+  seller: "%player_name%"
+  buyer: "%player_name%"

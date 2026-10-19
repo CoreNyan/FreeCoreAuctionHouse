@@ -177,6 +177,7 @@ public class AuctionHouseGUI extends InventoryGUI implements Runnable {
                     case 'm' -> {
                         if (!c.isAdmin()) this.addButton(slot, myAuctions()); else this.addButton(slot, commandBlockInfo());
                     }
+                    case 'a' -> this.addButton(slot, openSellButton());
                     case '.', ' ' -> {}
                     default -> {
                         String symbol = String.valueOf(places.get(i).charAt(j));
@@ -194,6 +195,8 @@ public class AuctionHouseGUI extends InventoryGUI implements Runnable {
                 }
             }
         }
+        int bottomRowStart = (places.size() - 1) * 9;
+        this.addButton(bottomRowStart + 2, openSellButton());
     }
     private InventoryButton fillerItem(){
         return new InventoryButton()
@@ -320,6 +323,16 @@ public class AuctionHouseGUI extends InventoryGUI implements Runnable {
                     update();
                 });
     }
+    private InventoryButton openSellButton() {
+        return new InventoryButton()
+                .creator(player -> ItemManager.openSellMenu)
+                .consumer(event -> {
+                    Sounds.click(event);
+                    Player p = (Player) event.getWhoClicked();
+                    AuctionHouse.getGuiManager().openGUI(new SellItemGUI(c, p.getInventory().getItemInMainHand()), p);
+                });
+    }
+
     private InventoryButton customButton(ItemStack item, Consumer<InventoryClickEvent> execute) {
         return new InventoryButton()
                 .creator(player -> item)

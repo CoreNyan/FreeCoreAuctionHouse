@@ -114,14 +114,18 @@ public class M extends Config {
     }
 
     private static String adventureApi(String input) {
+        if (input == null) return "";
+        // 先统一将 & 颜色代码转为标准 § 颜色代码
+        input = ChatColor.translateAlternateColorCodes('&', input);
         if (!SettingManager.useAdventureAPIMessages) return input;
         Component comp;
         try {
             comp = mm.deserialize(input);
+            return legacy.serialize(comp);
         } catch (Exception e) {
             comp = legacy.deserialize(input);
+            return legacy.serialize(comp);
         }
-        return legacy.serialize(comp);
     }
 
 }

@@ -38,6 +38,8 @@ dependencies {
     compileOnly("com.discordsrv:discordsrv:1.29.0")
     compileOnly("com.loohp:InteractiveChat:2026.1.1.0")
     compileOnly("com.loohp:InteractiveChatDiscordSrvAddon:2026.1.1.0")
+    implementation(files("libs/HikariCP-6.3.2.jar"))
+    implementation(files("libs/mysql-connector-j-9.3.0.jar"))
 }
 
 tasks.named("jar") {
@@ -50,7 +52,9 @@ tasks.named("shadowJar") {
     archiveVersion.set(version)
     relocate("net.kyori.adventure", "me.elaineqheart.auctionHouse.libs.adventure")
     relocate("space.arim.morepaperlib", "me.elaineqheart.auctionHouse.libs.morepaperlib")
-    destinationDirectory.set(file("/media/elaine/Boot/Elaine/programmieren/java/minecraft/MC_test_servers/1.21.5_paper/plugins"))
+    relocate("com.zaxxer.hikari", "me.elaineqheart.auctionHouse.libs.hikari")
+    destinationDirectory.set(file("build/libs"))
+    //destinationDirectory.set(file("/media/elaine/Boot/Elaine/programmieren/java/minecraft/MC_test_servers/1.21.5_paper/plugins"))
     //destinationDirectory.set(file("/media/elaine/Boot/Elaine/programmieren/java/minecraft/MC_test_servers/26.2_spigot/plugins"))
     //destinationDirectory.set(file("/media/elaine/Boot/Elaine/programmieren/java/minecraft/MC_test_servers/1.21.11_purpur/plugins"))
     //destinationDirectory.set(file("/media/elaine/Boot/Elaine/programmieren/java/minecraft/MC_test_servers/26.1.2_folia/plugins"))

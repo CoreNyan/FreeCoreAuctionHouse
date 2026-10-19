@@ -15,13 +15,16 @@ public class PlayerJoinCollectListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        if(!SettingManager.autoCollect) return;
         Player p = event.getPlayer();
         AuctionHouse.getScheduler().entitySpecificScheduler(p).runDelayed(() -> {
-            for(ItemNote note : AuctionHouseStorage.getMySortedDateCreated(p.getUniqueId())) collectSoldItem(note, p);
+            // 进服时立即投递跨服未读离线通知
+            me.elaineqheart.auctionHouse.data.persistentStorage.mysql.MySQLNotificationDAO.checkAndDeliverNotifications(p);
+            if(SettingManager.autoCollect) {
+                for(ItemNote note : AuctionHouseStorage.getMySortedDateCreated(p.getUniqueId())) collectSoldItem(note, p);
+            }
         },
                 null,
-                1);
+                20);
 
     }
 
